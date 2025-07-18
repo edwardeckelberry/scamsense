@@ -1,5 +1,5 @@
 # YOU HAVE TO DO THIS FIRST
-# Step 1: open terminal and run:
+# Step 1: open terminal in VSCode or editor and run:
 #python3 -m venv env
 #source env/bin/activate
 #pip3 install pandas numpy

@@ -1,18 +1,4 @@
-""" import numpy as np
-import pandas as pd
-
-import nltk
-from nltk.corpus import stopwords
-from nltk.stem.porter import PorterStemmer
-
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-
-
-nltk.download('stopwords')
-"""
-# Create your own env before running this code:
+# YOU HAVE TO DO THIS FIRST
 # Step 1: open terminal and run:
 #python3 -m venv env
 #source env/bin/activate

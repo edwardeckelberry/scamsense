@@ -9,5 +9,5 @@ import string
 import pandas as pd
 import numpy as np
 
-df = pd.read_csv('dataset.csv', encoding='ISO-8859-1')
+df = pd.read_csv('humor_dataset.csv', encoding='ISO-8859-1')
 print("data: ", df.head())

@@ -114,14 +114,14 @@ print(f"For spam and ham: {boxplot}\nmax: {max_boxplot}\nmin: {min_boxplot}")
 #the variance of word frequencies
 import math
 print("\nVariance:")
-spam_std = math.sqrt(sum((x - mean_spam) ** 2 for x in spam_counts.values()) / len(spam_counts))
-ham_std = math.sqrt(sum((x - mean_ham) ** 2 for x in ham_counts.values()) / len(ham_counts))
-common_std = math.sqrt(sum((x - mean_common) ** 2 for x in [count for _, count in common_word_counts]) / len(common_word_counts))
-print(f"spam: {spam_std}\nham: {ham_std}\nspam and ham: {common_std}")
+spam_var = math.sqrt(sum((x - mean_spam) ** 2 for x in spam_counts.values()) / len(spam_counts))
+ham_var = math.sqrt(sum((x - mean_ham) ** 2 for x in ham_counts.values()) / len(ham_counts))
+common_var = math.sqrt(sum((x - mean_common) ** 2 for x in [count for _, count in common_word_counts]) / len(common_word_counts))
+print(f"spam: {spam_var}\nham: {ham_var}\nspam and ham: {common_var}")
 
 #the standard deviation of word frequencies
 print("\nStandard Deviation:")
-spam_var = math.sqrt(spam_std)
-ham_var = math.sqrt(ham_std)
-common_var = math.sqrt(common_std)
-print(f"spam: {spam_var}\nham: {ham_var}\nspam and ham: {common_var}")
+spam_std = math.sqrt(spam_var)
+ham_std = math.sqrt(ham_var)
+common_std = math.sqrt(common_var)
+print(f"spam: {spam_std}\nham: {ham_std}\nspam and ham: {common_std}")

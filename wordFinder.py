@@ -1,6 +1,7 @@
 import pandas as pd
 from collections import Counter
 import string
+import test
 
 # Load the dataset
 df = pd.read_csv('dataset.csv', encoding='latin1')
@@ -144,3 +145,20 @@ print(f"spam: 1:2\nham: 1:5\ntotal: 1:8")
 
 correlation = common_var / (spam_std * ham_std)
 print(f"\nCorrelation between spam and ham word frequencies: {correlation}")
+
+#degree of freedom = number of rows -1 x number of columns -1
+df_common = (test.df.shape[1]-1) * (len(test.df)-1)
+#now we want to think of the null hypothesis:
+#null hypothesis: there is no difference between the detected spam and random selection
+#alternative hypothesis: there is a difference between the detected spam and random selection
+#we can use a chi-squared test to test the null hypothesis
+from scipy.stats import chisquare
+observed = [spam_count, ham_count]
+expected = [total_count / 2, total_count / 2]
+chi2_stat, p_value = chisquare(observed, expected)
+print(f"\nChi-squared test statistic: {chi2_stat}, p-value: {p_value}")
+if p_value < 0.05:
+    print("Reject the null hypothesis: there is a significant difference between the detected spam and random selection.")
+else:
+    print("Fail to reject the null hypothesis: there is no significant difference between the detected spam and random selection.")
+

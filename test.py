@@ -10,7 +10,7 @@ import pandas as pd
 import numpy as np
 
 df = pd.read_csv('humor_dataset.csv', encoding='ISO-8859-1')
-#print(df.head())
+print(len(df))
 
 spamDf = df.dropna(subset=['label', 'result'])
-print(spamDf.head())
+#print(spamDf.head())

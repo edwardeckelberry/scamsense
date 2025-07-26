@@ -125,3 +125,22 @@ spam_std = math.sqrt(spam_var)
 ham_std = math.sqrt(ham_var)
 common_std = math.sqrt(common_var)
 print(f"spam: {spam_std}\nham: {ham_std}\nspam and ham: {common_std}")
+
+#the skewness of word frequencies
+skew_spam = (3 * (mean_spam - spam_only_counts[med_spam_only][1])) / spam_std
+skew_ham = (3 * (mean_ham - ham_only_counts[med_ham][1])) / ham_std
+skew_common = (3 * (mean_common - common_word_counts[med_common][1])) / common_std
+print("\nSkewness:")
+print(f"spam: {skew_spam}\nham: {skew_ham}\nspam and ham: {skew_common}")
+
+#class imbalance
+spam_count = len(spam_df)
+ham_count = len(ham_df)
+total_count = spam_count + ham_count
+spam_ratio = spam_count / total_count
+ham_ratio = ham_count / total_count
+print("\nClass Imbalance:")
+print(f"spam: 1:2\nham: 1:5\ntotal: 1:8")
+
+correlation = common_var / (spam_std * ham_std)
+print(f"\nCorrelation between spam and ham word frequencies: {correlation}")

@@ -51,12 +51,13 @@ vectorizer = CountVectorizer()
 
 #x data and y data
 x = vectorizer.fit_transform(corpus).toarray()
-#y should be a number, 0 or 1: if ham or spam + dumor = 0, else 1
-#df['result'] = df['label'].apply(lambda x: 0 if x == 'ham' else 1)
-#x is the vectorized corpus, y is the result column
+
+#y is a binary classification, 0 for ham and 1 for spam
 y = df['num'].values
 
+#split the data into training and testing sets
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2)
+
 
 clf = RandomForestClassifier(n_jobs= -1)
 clf.fit(x_train, y_train)
@@ -64,15 +65,20 @@ clf.fit(x_train, y_train)
 #99.46 percent accuracy!!
 clf.score(x_test, y_test)
 
+# Example test: classify a specific message to see if it matches the label
 text_to_classify = df['message'].values[10]
 
+#this can be turned into a function
 class_text = text_to_classify.lower().translate(str.maketrans('', '', string.punctuation)).split()
 class_text = [stemmer.stem(word) for word in class_text if word not in stopwords_set]
 class_text = ' '.join(class_text)
 
 text_corpus = [class_text]
 
+#transform the text into training data then predict the label (ham in this case)
 x_text2 = vectorizer.transform(text_corpus)
 test_result = int(clf.predict(x_text2))
-print(test_result == df['num'].iloc[10])  # This should print True if the prediction matches the actual label
+
+#example test: it's 0 == 0, meaning it's a ham message
+print(test_result == df['num'].iloc[10]) 
 

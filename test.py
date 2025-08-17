@@ -85,3 +85,19 @@ print(test_result == df['num'].iloc[10])
 
 df = pd.read_csv('dataset.csv', encoding='ISO-8859-1')
 print("data: ", df.head())
+
+#identify the top 20 most important features
+importances = clf.feature_importances_
+
+# Sort the top 20 features
+indices = np.argsort(importances)[-20:]
+
+plt.figure(figsize=(10,6))
+plt.barh(range(len(indices)), importances[indices], align="center")
+plt.yticks(range(len(indices)), np.array(vectorizer.get_feature_names_out())[indices])
+plt.title("Top 20 Important Features (Words) in Random Forest")
+plt.xlabel("Feature Importance")
+plt.tight_layout()
+plt.savefig("top_20_features.png", dpi=150)
+plt.close()
+print("Saved top 20 features barplot: top_20_features.png")

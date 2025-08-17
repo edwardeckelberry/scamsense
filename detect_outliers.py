@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy import stats
 from sklearn.preprocessing import StandardScaler
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.ensemble import RandomForestClassifier
 import sys
 
 # === CONFIG ===
@@ -103,6 +105,9 @@ for metric in metrics:
 outliers_df = df[df['outlier_char_count_iqr']].copy()
 outliers_df.to_csv("humor_outliers_charcount_iqr.csv", index=False)
 print("Wrote outlier subset (char_count IQR): humor_outliers_charcount_iqr.csv")
+# Summary counts
+for m in metrics:
+    print(f"Metric {m}: IQR outliers={df[f'outlier_{m}_iqr'].sum()}, Zscore outliers={df[f'outlier_{m}_zscore'].sum()}")
 
 # 8) Discretize data for bar graph visualization
 df['char_count_bin'] = pd.cut(df['char_count'], bins=4, labels=["short", "medium", "long", "very_long"])
@@ -141,21 +146,51 @@ for metric in ['char_count_norm', 'word_count_norm']:
     plt.close()
     print(f"Saved histogram: histogram_{metric}.png")
 
-# 12) Discretize and graph unique word frequency compared to message length
+# 12) Discretize features of the random forest classifier
 plt.figure(figsize=(8,6))
-sns.lineplot(x=df['char_count'], y=df['unique_word_count'], alpha=0.5)
-plt.title("Unique Word Count vs Message Length")
-plt.xlabel("Message Length (Characters)")
+sns.boxplot(x=df['num'], y=df['unique_word_count'])
+plt.title("Unique Word Count by Class (0 = humor, 1 = dumor)")
+plt.xlabel("Class")
 plt.ylabel("Unique Word Count")
-plt.tight_layout()
-plt.savefig("barplot_unique_word_frequency.png", dpi=150)
-plt.show()
+plt.savefig("boxplot_unique_word_frequency.png", dpi=150)
 plt.close()
-print("Saved barplot: barplot_unique_word_frequency.png")
+print("Saved barplot: boxplot_unique_word_frequency.png")
 
+# 13) Word usage Outliers and normals by results classification
+for metric in ['word_count', 'char_count']:
+    class_col = df.columns[2]
+    plt.figure(figsize=(8,6))
+    sns.violinplot(x=class_col, y=metric, data=df, inner="quartile", cut=0)
+    normal_df = df[~df[f'outlier_{metric}_iqr']]
+    sns.stripplot(x=class_col, y=metric, data=normal_df, color='gray', jitter=True, size=4, alpha=0.6)
+    outlier_df = df[df[f'outlier_{metric}_iqr']]
+    sns.stripplot(x=class_col, y=metric, data=outlier_df, color='red', jitter=False, size=6, marker='D')
+    plt.title("Word usage across both humor levels of spam (red = IQR outliers)")
+    plt.tight_layout()
+    plt.savefig(f"violinplot_{metric}.png", dpi=150)
+    plt.close()
+    print(f"Saved violin plot: violinplot_{metric}.png")
 
-# Summary counts
-for m in metrics:
-    print(f"Metric {m}: IQR outliers={df[f'outlier_{m}_iqr'].sum()}, Zscore outliers={df[f'outlier_{m}_zscore'].sum()}")
+#14 ) Normal distribution of unique word usage in spam messages only
+
+metric = "unique_word_count"
+class_col = df.columns[2]
+spam_label = "dumor"
+
+# Subset spam only
+spam_df = df[df[class_col] == spam_label]
+
+plt.figure(figsize=(10,6))
+sns.histplot(spam_df[metric], bins=30, kde=True, color="blue", alpha=0.6)
+
+plt.title(f"Normal Distribution of {metric.replace('_',' ')} (Spam Messages Only)")
+plt.xlabel("Unique Word Count")
+plt.ylabel("Frequency")
+plt.tight_layout()
+plt.savefig(f"normal_distribution_{metric}_spam.png", dpi=150)
+plt.close()
+
+print(f"Saved: normal_distribution_{metric}_spam.png")
+
 
 print("Done.")

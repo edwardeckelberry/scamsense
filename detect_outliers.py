@@ -99,16 +99,19 @@ for metric in metrics:
     plt.close()
     print("Saved boxplot:", fname)
 
-# 7) Discretize data for visualization
+# 7) Create a CSV with only the detected outliers (by char_count IQR by default)
+outliers_df = df[df['outlier_char_count_iqr']].copy()
+outliers_df.to_csv("humor_outliers_charcount_iqr.csv", index=False)
+print("Wrote outlier subset (char_count IQR): humor_outliers_charcount_iqr.csv")
+
+# 8) Discretize data for bar graph visualization
 df['char_count_bin'] = pd.cut(df['char_count'], bins=4, labels=["short", "medium", "long", "very_long"])
 df['word_count_bin'] = pd.cut(df['word_count'], bins=4, labels=["short", "medium", "long", "very_long"])
-df['unique_word_count_bin'] = pd.cut(df['unique_word_count'], bins=4, labels=["few", "some", "many", "very_many"])
-
 bins = pd.cut(df['char_count'], bins=4)
 print(bins.cat.categories)
 
-# 8) print bar graph of discretized data
-for metric in ['char_count_bin', 'word_count_bin', 'unique_word_count_bin']:
+# 9) print bar graph of discretized data
+for metric in ['char_count_bin', 'word_count_bin']:
     plt.figure(figsize=(8,6))
     sns.countplot(x=metric, data=df)
     plt.title(f"Distribution of {metric}")
@@ -120,13 +123,12 @@ for metric in ['char_count_bin', 'word_count_bin', 'unique_word_count_bin']:
     plt.close()
     print("Saved barplot:", fname)
 
-# 9) normalize word count and character count data for visualization
+# 10) normalize word count and character count data for visualization
 scaler = StandardScaler()
 df['char_count_norm'] = scaler.fit_transform(df[['char_count']])
 df['word_count_norm'] = scaler.fit_transform(df[['word_count']])
 
-
-# 10) print histogram graph of normalized word count
+# 11) print histogram graph of normalized word count
 for metric in ['char_count_norm', 'word_count_norm']:
     plt.figure(figsize=(8,6))
     sns.histplot(x=metric, data=df, bins=30, kde=True, color='blue')
@@ -139,10 +141,18 @@ for metric in ['char_count_norm', 'word_count_norm']:
     plt.close()
     print(f"Saved histogram: histogram_{metric}.png")
 
-# ) Create a CSV with only the detected outliers (by char_count IQR by default)
-outliers_df = df[df['outlier_char_count_iqr']].copy()
-outliers_df.to_csv("humor_outliers_charcount_iqr.csv", index=False)
-print("Wrote outlier subset (char_count IQR): humor_outliers_charcount_iqr.csv")
+# 12) Discretize and graph unique word frequency compared to message length
+plt.figure(figsize=(8,6))
+sns.lineplot(x=df['char_count'], y=df['unique_word_count'], alpha=0.5)
+plt.title("Unique Word Count vs Message Length")
+plt.xlabel("Message Length (Characters)")
+plt.ylabel("Unique Word Count")
+plt.tight_layout()
+plt.savefig("barplot_unique_word_frequency.png", dpi=150)
+plt.show()
+plt.close()
+print("Saved barplot: barplot_unique_word_frequency.png")
+
 
 # Summary counts
 for m in metrics:

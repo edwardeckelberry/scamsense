@@ -8,8 +8,6 @@
 import string
 import pandas as pd
 import numpy as np
-<<<<<<< Updated upstream
-=======
 import seaborn as sns
 import matplotlib.pyplot as plt
 from collections import Counter
@@ -84,7 +82,6 @@ test_result = int(pred_array[0])
 
 #example test: it's 0 == 0, meaning it's a ham message
 print(test_result == df['num'].iloc[10]) 
->>>>>>> Stashed changes
 
 df = pd.read_csv('dataset.csv', encoding='ISO-8859-1')
 print("data: ", df.head())

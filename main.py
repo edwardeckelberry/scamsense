@@ -11,6 +11,8 @@ from nltk.stem import PorterStemmer
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import f1_score
+from sklearn.metrics import confusion_matrix
 
 try:
     _create_unverified_https_context = ssl._create_unverified_context
@@ -51,12 +53,22 @@ y = df['num'].values
 #split the data into training and testing sets
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2)
 
-#Random Forest Classifier uses CART to classify the data
+#Random Forest Classifier is the model used for classification
 clf = RandomForestClassifier(n_jobs= -1)
 clf.fit(x_train, y_train)
 
 #this scores the accuracy of the model
-clf.score(x_test, y_test)
+print("Accuracy: ", clf.score(x_test, y_test))
+
+#f1 score
+y_pred = clf.predict(x_test)
+f1 = f1_score(y_test, y_pred)
+print("F1 Score: ", f1)
+
+#TNR calculation
+tn, fp, fn, tp = confusion_matrix(y_test, y_pred).ravel()
+tnr = tn / (tn + fp)
+print(f"TNR (Specificity): {tnr:.4f}")
 
 # Example test: classify a specific message to see if it matches the label
 num_val = 8

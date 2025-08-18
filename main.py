@@ -66,9 +66,10 @@ f1 = f1_score(y_test, y_pred)
 print("F1 Score: ", f1)
 
 #TNR calculation
-tn, fp, fn, tp = confusion_matrix(y_test, y_pred).ravel()
+"""tn, fp, fn, tp = confusion_matrix(y_test, y_pred).ravel()
 tnr = tn / (tn + fp)
-print(f"TNR (Specificity): {tnr}")
+print(f"TNR (Specificity): {tnr}") """
+
 
 # Example test: classify a specific message to see if it matches the label
 num_val = 8
